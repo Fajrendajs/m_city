@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/app";
 import "firebase/database";
+import "firebase/auth";
 
 // https://console.firebase.google.com/project/m-city-edf44/database/m-city-edf44/data
 
