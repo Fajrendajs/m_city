@@ -41,6 +41,7 @@ export default function Header(props) {
           </Toolbar>
         </AppBar>
       </HideOnScroll>
+      <div className={classes.toolbarMargin} />
     </div>
   );
 }

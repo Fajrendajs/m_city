@@ -11,6 +11,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import useForm from "./useform";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -38,41 +39,41 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Signin() {
-  const [message, setMessage] = useState({
-    formerror: false,
-    formsuccess: "",
-    formdata: {
-      email: {
-        element: "input",
-        value: "",
-        config: {
-          name: "email_input",
-          type: "email",
-          placeholder: "Enter your email"
-        },
-        validation: {
-          required: true,
-          email: true
-        },
-        valid: false,
-        validationmessage: ""
-      },
-      password: {
-        element: "input",
-        value: "",
-        config: {
-          name: "password_input",
-          type: "password",
-          placeholder: "Enter your password"
-        },
-        validation: {
-          required: true
-        },
-        valid: false,
-        validationmessage: ""
+  // Define your state schema
+  const stateSchema = {
+    email: { value: "", error: "" },
+    password: { value: "", error: "" }
+  };
+
+  // Define your validationStateSchema
+  // Note: validationStateSchema and stateSchema property
+  // should be the same in-order validation works!
+  const validationStateSchema = {
+    email: {
+      required: true,
+      validator: {
+        regEx: /\S+@\S+\.\S+/,
+        error: "Invalid email format."
+      }
+    },
+    password: {
+      required: true,
+      validator: {
+        regEx: /^([a-zA-Z0-9_-]){3,5}$/,
+        error: "Invalid last name format."
       }
     }
-  });
+  };
+
+  function onSubmitForm(state) {
+    console.log(JSON.stringify(state, null, 2));
+  }
+
+  const { state, handleOnChange, handleOnSubmit, disable } = useForm(
+    stateSchema,
+    validationStateSchema,
+    onSubmitForm
+  );
 
   const classes = useStyles();
 
@@ -86,8 +87,10 @@ export default function Signin() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <TextField
+            onChange={handleOnChange}
+            value={state.email.value}
             variant="outlined"
             margin="normal"
             required
@@ -98,7 +101,10 @@ export default function Signin() {
             autoComplete="email"
             autoFocus
           />
+          {state.email.error && <p className="error">{state.email.error}</p>}
           <TextField
+            onChange={handleOnChange}
+            value={state.password.value}
             variant="outlined"
             margin="normal"
             required
@@ -109,6 +115,9 @@ export default function Signin() {
             id="password"
             autoComplete="current-password"
           />
+          {state.password.error && (
+            <p className="error">{state.password.error}</p>
+          )}
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
@@ -119,6 +128,7 @@ export default function Signin() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={disable}
           >
             Sign In
           </Button>
