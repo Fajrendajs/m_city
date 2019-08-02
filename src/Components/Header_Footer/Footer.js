@@ -1,17 +1,21 @@
 import React from "react";
-import { CityLogo } from "../ui/icons.js";
+import { makeStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core";
 
-const Footer = () => {
+const useStyles = makeStyles(theme => ({
+  copy: {
+    margin: "auto",
+    minHeight: "10px"
+  }
+}));
+
+export default function Footer() {
+  const classes = useStyles();
   return (
-    <footer className="bck_blue">
-      <div className="footer_logo">
-        <CityLogo link={true} linkTo="/" width="70px" height="70px" />
-      </div>
-      <div className="footer_discl">
-        Manchester city 2018. All rights reserved.
-      </div>
-      Footer
-    </footer>
+    <div>
+      <Typography className={classes.copy}>
+        Manchester City 2018. All rights reserved.
+      </Typography>
+    </div>
   );
-};
-export default Footer;
+}
